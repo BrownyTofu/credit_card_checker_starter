@@ -5,6 +5,7 @@ const valid3 = [3, 7, 1, 6, 1, 2, 0, 1, 9, 9, 8, 5, 2, 3, 6]
 const valid4 = [6, 0, 1, 1, 1, 4, 4, 3, 4, 0, 6, 8, 2, 9, 0, 5]
 const valid5 = [4, 5, 3, 9, 4, 0, 4, 9, 6, 7, 8, 6, 9, 6, 6, 6]
 
+
 // All invalid credit card numbers
 const invalid1 = [4, 5, 3, 2, 7, 7, 8, 7, 7, 1, 0, 9, 1, 7, 9, 5]
 const invalid2 = [5, 7, 9, 5, 5, 9, 3, 3, 9, 2, 1, 3, 4, 6, 4, 3]
@@ -24,9 +25,58 @@ const batch = [valid1, valid2, valid3, valid4, valid5, invalid1, invalid2, inval
 
 
 // Add your functions below:
+function validateCred(creditNums) {
+    const copyOfCreditNums = creditNums.map(num => num);
+    let sumOfValidateNums = 0;
+    //Do Luhn algorithm
+    for (let i = 0; i < copyOfCreditNums.length; i++) {
+        if (i % 2 === 0) {
+            copyOfCreditNums[i] = (copyOfCreditNums[i] * 2) > 9? copyOfCreditNums[i] * 2 -9 : copyOfCreditNums[i] * 2;
+        } else {
+            // do nothing
+        }
+        sumOfValidateNums = sumOfValidateNums + copyOfCreditNums[i];
+    }
+    let validateResult = sumOfValidateNums % 10 === 0;
+
+    return validateResult;
+}
 
 
+function findInvalidCards(batch) {
+    const invalidNumsBatch = [];
+    for (creditNums of batch ) {
+        if (validateCred(creditNums)) {
+            //valid, Do nothing
+        } else {
+            invalidNumsBatch.push(creditNums);
+        }
+    }
+    return invalidNumsBatch;
+}
 
+function idInvalidCardCompanies(invalidNumsBatch) {
+    const companyList = [,,,'Amex (American Express)', 'Visa', 'Mastercard', 'Discover'];
+    const invalidCompanies = [];
+    for (invalidNums of invalidNumsBatch) {
+        let invalidCompany = companyList[invalidNums[0]];
+        if (invalidCompany) {
+            
+            if (invalidCompanies.indexOf(invalidCompany) === -1) {
+                invalidCompanies.push(invalidCompany);
+            } else {
+               //invalid company exist, do nothing
+            }
+            
+        } else {
+            console.log('Company not found');
+        }
+    }
+    return invalidCompanies;
+}
+//console.log(validateCred(valid5));
+const invalidCards = findInvalidCards(batch);
+console.log(idInvalidCardCompanies(invalidCards));
 
 
 
